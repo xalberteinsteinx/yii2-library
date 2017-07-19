@@ -17,9 +17,7 @@
     "black-lamp/yii2-multi-lang": "^1.0.0",
     "black-lamp/yii2-imagable": "1.*",
 
-    "marqu3s/yii2-summernote": "1.0.0",
-  },
-  "reqire-dev": {
+    "marqu3s/yii2-summernote": "1.0.0"
   },
   "autoload": {
     "psr-4": {
