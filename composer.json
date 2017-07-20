@@ -1,7 +1,8 @@
 {
   "name": "xalberteinsteinx/yii2-library",
-  "description": "Content library module for Yii2",
+  "description": "Multifunctional Yii2 module for storing and editing content",
   "keywords": ["yii2", "library", "content", "articles"],
+  "license": "GPL-3.0+",
   "type": "yii2-extension",
   "authors": [
     {
