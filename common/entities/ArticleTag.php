@@ -77,7 +77,7 @@ class ArticleTag extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleTagTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleTagTranslation::className(), ['article_tag_id' => 'id']);
     }

@@ -44,9 +44,9 @@ class ArticleCategoryTranslation extends ActiveRecord
     {
         return [
             [['article_category_id', 'language_id', 'title'], 'required'],
-            [['article_category_id', 'language_id', 'alias'], 'integer'],
+            [['article_category_id', 'language_id'], 'integer'],
             [['intro_text', 'full_text'], 'string'],
-            [['title', 'meta_author', 'meta_copyright'], 'string', 'max' => 255],
+            [['title', 'meta_author', 'meta_copyright', 'alias'], 'string', 'max' => 255],
             [['seo_title'], 'string', 'max' => 80],
             [['meta_keywords', 'meta_description'], 'string', 'max' => 200],
             [['meta_robots'], 'string', 'max' => 20],

@@ -89,7 +89,7 @@ class ArticleImage extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleImageTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleImageTranslation::className(), ['article_image_id' => 'id']);
     }

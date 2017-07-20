@@ -87,7 +87,7 @@ class ArticleAttachment extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleAttachmentTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleAttachmentTranslation::className(), ['article_attachment_id' => 'id']);
     }

@@ -133,7 +133,7 @@ class ArticleCategory extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleCategoryTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleCategoryTranslation::className(), ['article_category_id' => 'id']);
     }

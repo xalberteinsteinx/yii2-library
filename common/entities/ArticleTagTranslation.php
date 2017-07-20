@@ -45,9 +45,9 @@ class ArticleTagTranslation extends ActiveRecord
     {
         return [
             [['article_tag_id', 'language_id', 'name'], 'required'],
-            [['article_tag_id', 'language_id', 'alias'], 'integer'],
+            [['article_tag_id', 'language_id'], 'integer'],
             [['intro_text', 'full_text'], 'string'],
-            [['name', 'title', 'meta_author', 'meta_copyright'], 'string', 'max' => 255],
+            [['name', 'title', 'meta_author', 'meta_copyright', 'alias'], 'string', 'max' => 255],
             [['seo_title'], 'string', 'max' => 80],
             [['meta_keywords', 'meta_description'], 'string', 'max' => 200],
             [['meta_robots'], 'string', 'max' => 20],

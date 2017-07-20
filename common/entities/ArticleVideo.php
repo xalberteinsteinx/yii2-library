@@ -93,7 +93,7 @@ class ArticleVideo extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleVideoTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleVideoTranslation::className(), ['article_video_id' => 'id']);
     }
