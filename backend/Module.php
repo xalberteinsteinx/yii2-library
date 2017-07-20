@@ -1,12 +1,19 @@
 <?php
+
 namespace xalberteinsteinx\library\backend;
 use Yii;
 
 /**
+ * Backend module definition class
  * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
  */
 class Module extends \yii\base\Module
 {
+
+    /**
+     * @inheritdoc
+     */
+    public $controllerNamespace = 'xalberteinsteinx\library\backend\controllers';
 
     /**
      * @inheritdoc
