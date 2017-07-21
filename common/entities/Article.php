@@ -82,6 +82,7 @@ class Article extends ActiveRecord
     {
         return [
             [['category_id', 'user_id', 'position', 'hits', 'show'], 'integer'],
+            [['category_id'], 'default', 'value' => NULL],
             [['position', 'publish_at'], 'required'],
             [['created_at', 'updated_at', 'publish_at'], 'safe'],
             [['key', 'view_name'], 'string', 'max' => 255],

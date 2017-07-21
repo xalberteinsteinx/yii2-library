@@ -81,6 +81,7 @@ class ArticleCategory extends ActiveRecord
         return [
             [['parent_id', 'user_id', 'position', 'hits', 'show'], 'integer'],
             [['show', 'publish_at'], 'required'],
+            [['parent_id'], 'default', 'value' => NULL],
             [['created_at', 'updated_at', 'publish_at'], 'safe'],
             [['key', 'view_name', 'article_view_name'], 'string', 'max' => 255],
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => ArticleCategory::className(), 'targetAttribute' => ['parent_id' => 'id']],
