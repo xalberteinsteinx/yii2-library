@@ -113,6 +113,13 @@ $selectedLanguageId = $selectedLanguage->id;
                 ]);
                 ?>
 
+                <!--PUBLISH AT-->
+                <?= $form->field($article, 'publish_at', [
+                    'inputOptions' => [
+                        'class' => 'form-control'
+                    ]
+                ])->input('datetime-local', ['value' => date('Y-m-d\TH:i')]); ?>
+
                 <!--SHOW-->
                 <div style="display: inline-block;">
                     <?php $article->show = ($article->isNewRecord) ? true : $article->show; ?>
@@ -219,9 +226,6 @@ $selectedLanguageId = $selectedLanguage->id;
                 'class' => 'btn btn-danger btn-xs'
             ]); ?>
         </section>
-    </div>
-
-    <?php $form::end(); ?>
 
     <?php if (!$article->isNewRecord): ?>
         <div class="created-by">
@@ -247,9 +251,12 @@ $selectedLanguageId = $selectedLanguage->id;
                 <b>
                     <?= \Yii::t('library', 'Shows'); ?>:
                 </b>
-                <?= $article->hits; ?>
+                <?= $article->hits ?? 0; ?>
             </p>
         </div>
     <?php endif; ?>
+    </div>
+
+    <?php $form::end(); ?>
 
 </div>

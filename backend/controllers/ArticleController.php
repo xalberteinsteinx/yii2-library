@@ -3,17 +3,19 @@
 namespace xalberteinsteinx\library\backend\controllers;
 
 use bl\multilang\entities\Language;
+use xalberteinsteinx\library\backend\components\forms\ArticleVideoForm;
 use xalberteinsteinx\library\common\entities\ArticleTranslation;
+use xalberteinsteinx\library\common\entities\ArticleVideo;
 use Yii;
 use xalberteinsteinx\library\common\entities\Article;
 use xalberteinsteinx\library\common\search\ArticleSearch;
 use yii\filters\AccessControl;
-use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use yii2tech\ar\position\PositionBehavior;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
@@ -39,6 +41,7 @@ class ArticleController extends Controller
                             'save',
                             'add-image', 'delete-image', 'edit-image',
                             'add-video', 'delete-video',
+                            'video-up', 'video-down',
                             'image-up', 'image-down',
                             'up', 'down', 'generate-seo-url',
                         ],
@@ -56,12 +59,6 @@ class ArticleController extends Controller
                         'roles' => ['moderateArticleCreation'],
                         'allow' => true,
                     ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -83,6 +80,14 @@ class ArticleController extends Controller
         ]);
     }
 
+    /**
+     * Creates new or updates existing Article and ArticleTranslation models.
+     * @param null|integer $id
+     * @param null|integer $languageId
+     * @return string|\yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionSave($id = null, $languageId = null)
     {
         $selectedLanguage = (!empty($languageId)) ? Language::findOne($languageId) : Language::getCurrent();
@@ -105,29 +110,39 @@ class ArticleController extends Controller
             } else throw new ForbiddenHttpException();
         }
 
+        /*POST*/
         if (Yii::$app->request->isPost) {
             $post = \Yii::$app->request->post();
             if ($article->load($post)) {
+
                 $article->category_id = (!empty($article->category_id)) ? $article->category_id : NULL;
+
+                /*Position*/
+                if ($article->category_id == null) {
+                    $article->position = Article::find()->select('position')->where(['category_id' => null])->max('position') + 1;
+                }
+
                 if ($article->isNewRecord) {
                     $article->user_id = Yii::$app->user->id;
 
                     if ($article->validate()) $article->save();
                     else Yii::$app->session->setFlash(
                         'error',
-                        \Yii::t('library', 'An error occurred during the creation of the article'));
+                        \Yii::t('library', 'An error occurred during the save of the article'));
                 } else {
                     if (!$article->validate())
                         Yii::$app->session->setFlash(
                             'error',
-                            \Yii::t('library', 'An error occurred during the creation of the article'));
+                            \Yii::t('library', 'An error occurred during the save of the article'));
                 }
 
                 if ($articleTranslation->load($post)) {
-                    //Sets alias
+
+                    /*Sets alias*/
                     if (empty($articleTranslation->alias)) {
-                        $articleTranslation->alias = Inflector::slug($articleTranslation->title);
+                        $articleTranslation->alias = ArticleTranslation::generateAlias($articleTranslation->title);
                     }
+
                     $article->save();
                     $articleTranslation->article_id = $article->id;
                     $articleTranslation->language_id = $selectedLanguage->id;
@@ -135,8 +150,14 @@ class ArticleController extends Controller
                     if ($articleTranslation->validate()) {
                         $articleTranslation->save();
 
+                        Yii::$app->session->setFlash(
+                            'success',
+                            \Yii::t('library', 'You have successfully save this article'));
                         return $this->redirect(Url::to(['save', 'id' => $article->id, 'languageId' => $selectedLanguage->id]));
                     }
+                    else Yii::$app->session->setFlash(
+                        'error',
+                        \Yii::t('library', 'An error occurred during the save of the article'));
                 }
             }
         }
@@ -160,34 +181,263 @@ class ArticleController extends Controller
     }
 
 
+    /**
+     * Changes article position to up
+     *
+     * @param integer $id
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionUp($id)
+    {
+        $article = Article::findOne($id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+            if (!empty($article)) {
+                /**
+                 * @var $article PositionBehavior
+                 */
+                $article->movePrev();
+            }
+            if (\Yii::$app->request->isPjax) return $this->actionIndex();
+            return $this->redirect(\Yii::$app->request->referrer);
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+    }
 
+    /**
+     * Changes article position to down
+     *
+     * @param integer $id
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionDown($id)
+    {
+        $article = Article::findOne($id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+            if (!empty($article)) {
+                /**
+                 * @var $article PositionBehavior
+                 */
+                $article->moveNext();
+            }
+            if (\Yii::$app->request->isPjax) return $this->actionIndex();
+            return $this->redirect(\Yii::$app->request->referrer);
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+    }
 
     /**
      * Deletes an existing Article model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @return mixed
+     * @return mixed|\yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $article = Article::findOne($id);
+        if (empty($article)) throw new NotFoundHttpException();
+        if (\Yii::$app->user->can('deleteArticle', ['articleOwner' => $article->user_id])) {
+            $article->delete();
 
-        return $this->redirect(['index']);
+            \Yii::$app->session->setFlash('success', Yii::t('library', 'You have successfully removed this article'));
+
+            if (\Yii::$app->request->isPjax) return $this->actionIndex();
+            return $this->redirect('index');
+        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to delete this article.'));
     }
 
     /**
-     * Finds the Article model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Article the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Generates seo Url from title on add-basic page
+     *
+     * @param string $title
+     * @return string
      */
-    protected function findModel($id)
+    public function actionGenerateSeoUrl($title)
     {
-        if (($model = Article::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+        $newAlias = ArticleTranslation::generateAlias($title);
+        return $newAlias;
+    }
+
+
+    /**
+     * @param integer $id           ID of article
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionAddVideo($id, $languageId)
+    {
+        $article = Article::findOne($id);
+        if (!empty($article)) {
+
+            if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+
+                $video = new ArticleVideo();
+                $videoForm = new ArticleVideoForm();
+
+                if (Yii::$app->request->isPost) {
+                    $video->load(Yii::$app->request->post());
+                    $videoForm->load(Yii::$app->request->post());
+                    $videoForm->file_name = UploadedFile::getInstance($videoForm, 'file_name');
+
+                    if ($fileName = $videoForm->upload()) {
+                        $video->video_name = $fileName;
+                        $video->resource = 'videofile';
+                        $video->article_id = $id;
+                        $video->save();
+                    }
+                    if ($video->resource == 'youtube') {
+                        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $video->video_name, $match)) {
+                            $video_name = $match[1];
+                            $video->article_id = $id;
+                            $video->video_name = $video_name;
+
+                            if ($video->validate()) {
+                                $video->save();
+                            }
+                        } else {
+                            \Yii::$app->session->setFlash('error',
+                                \Yii::t('library', 'Sorry, this format is not supported'));
+                        }
+                    } elseif ($video->resource == 'vimeo') {
+                        $regexstr = '~
+                        # Match Vimeo link and embed code
+                        (?:&lt;iframe [^&gt;]*src=")?		# If iframe match up to first quote of src
+                        (?:							        # Group vimeo url
+                            https?:\/\/				        # Either http or https
+                            (?:[\w]+\.)*			        # Optional subdomains
+                            vimeo\.com				        # Match vimeo.com
+                            (?:[\/\w]*\/videos?)?	        # Optional video sub directory this handles groups links also
+                            \/						        # Slash before Id
+                            ([0-9]+)				        # $1: VIDEO_ID is numeric
+                            [^\s]*					        # Not a space
+                        )							        # End group
+                        "?							        # Match end quote if part of src
+                        (?:[^&gt;]*&gt;&lt;/iframe&gt;)?	# Match the end of the iframe
+                        (?:&lt;p&gt;.*&lt;/p&gt;)?		    # Match any title information stuff
+                        ~ix';
+                        if (preg_match($regexstr, $video->video_name, $match)) {
+                            $video_name = $match[1];
+                            $video->article_id = $id;
+                            $video->video_name = $video_name;
+
+                            if ($video->validate()) {
+                                $video->save();
+                            }
+                        } else {
+                            \Yii::$app->session->setFlash('error', \Yii::t('library', 'Sorry, this format is not supported'));
+                        }
+                    }
+                }
+                $params = [
+                    'article' => $article,
+                    'selectedLanguage' => Language::findOne($languageId),
+                    'video_form_upload' => new ArticleVideoForm(),
+                ];
+
+                if (Yii::$app->request->isPjax) {
+                    return $this->renderPartial('add-video', $params);
+                }
+                return $this->render('save', [
+                    'article' => $article,
+                    'viewName' => 'add-video',
+                    'params' => $params]);
+            } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
         }
+
+        else throw new NotFoundHttpException();
+    }
+
+    /**
+     * Changes ArticleVideo position to up
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionVideoUp($id, $languageId)
+    {
+        $articleVideo = ArticleVideo::findOne($id);
+        $article = Article::findOne($articleVideo->article_id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+            if ($articleVideo) {
+                /**
+                 * @var $articleVideo PositionBehavior
+                 */
+                $articleVideo->movePrev();
+            }
+
+            if (\Yii::$app->request->isPjax) return $this->renderPartial('add-video', [
+                'article' => $article,
+                'selectedLanguage' => Language::findOne($languageId),
+                'video_form_upload' => new ArticleVideoForm(),
+            ]);
+            else return $this->redirect(\Yii::$app->request->referrer);
+        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+    }
+
+    /**
+     * Changes ArticleVideo position to down
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionVideoDown($id, $languageId)
+    {
+        $articleVideo = ArticleVideo::findOne($id);
+        $article = Article::findOne($articleVideo->article_id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+            if ($articleVideo) {
+                /**
+                 * @var $articleVideo PositionBehavior
+                 */
+                $articleVideo->moveNext();
+            }
+
+            if (\Yii::$app->request->isPjax) return $this->renderPartial('add-video', [
+                'article' => $article,
+                'selectedLanguage' => Language::findOne($languageId),
+                'video_form_upload' => new ArticleVideoForm(),
+            ]);
+            else return $this->redirect(\Yii::$app->request->referrer);
+        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+    }
+
+    /**
+     * Deletes video
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionDeleteVideo($id, $languageId)
+    {
+        if (!empty($id)) {
+            $video = ArticleVideo::findOne($id);
+            $article = Article::findOne($video->article_id);
+            if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+                if ($video->resource == 'videofile') {
+                    $dir = Yii::getAlias('@frontend/web/video');
+                    unlink($dir . '/' . $video->video_name);
+                }
+                $video->delete();
+
+                $params = [
+                    'article' => $article,
+                    'selectedLanguage' => Language::findOne($languageId),
+                    'video_form_upload' => new ArticleVideoForm(),
+                ];
+
+                if (\Yii::$app->request->isPjax) return $this->renderPartial('add-video', $params);
+                else return $this->redirect(\Yii::$app->request->referrer);
+            } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+        }
+        return false;
     }
 }

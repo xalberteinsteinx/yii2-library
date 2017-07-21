@@ -1,6 +1,7 @@
 <?php
 use bl\multilang\entities\Language;
 use rmrevin\yii\fontawesome\FA;
+use xalberteinsteinx\library\backend\widgets\ManageButtons;
 use xalberteinsteinx\library\common\entities\ArticleCategory;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -128,7 +129,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'key',
                 // 'publish_at',
 
-                ['class' => 'yii\grid\ActionColumn'],
+                /*ACTIONS*/
+                [
+                    'headerOptions' => ['class' => 'text-center col-md-2'],
+                    'attribute' => \Yii::t('library', 'Control'),
+                    'value' => function ($model) {
+                        return ManageButtons::widget(['model' => $model]);
+                    },
+                    'format' => 'raw',
+                    'contentOptions' => ['class' => 'text-center'],
+                ],
             ],
         ]); ?>
     </div>
