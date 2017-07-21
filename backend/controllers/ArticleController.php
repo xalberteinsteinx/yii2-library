@@ -157,8 +157,7 @@ class ArticleController extends Controller
                             'success',
                             \Yii::t('library', 'You have successfully save this article'));
                         return $this->redirect(Url::to(['save', 'id' => $article->id, 'languageId' => $selectedLanguage->id]));
-                    }
-                    else Yii::$app->session->setFlash(
+                    } else Yii::$app->session->setFlash(
                         'error',
                         \Yii::t('library', 'An error occurred during the save of the article'));
                 }
@@ -365,9 +364,57 @@ class ArticleController extends Controller
 
 
     /**
+     * Changes ArticleImage model position property to down
+     *
      * @param integer $id
      * @param integer $languageId
      * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionImageDown($id, $languageId)
+    {
+        $articleImage = ArticleImage::findOne($id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => Article::findOne($articleImage->article_id)->user_id])) {
+            if (!empty($articleImage)) {
+
+                /**
+                 * @var $articleImage PositionBehavior|ArticleImage
+                 */
+                $articleImage->moveNext();
+            }
+            return $this->actionAddImage($articleImage->article_id, $languageId);
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+    }
+
+    /**
+     * Changes ArticleImage model position property to up
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionImageUp($id, $languageId)
+    {
+        $articleImage = ArticleImage::findOne($id);
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => Article::findOne($articleImage->article_id)->user_id])) {
+            if (!empty($articleImage)) {
+
+                /**
+                 * @var $articleImage PositionBehavior|ArticleImage
+                 */
+                $articleImage->movePrev();
+            }
+            return $this->actionAddImage($articleImage->article_id, $languageId);
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+    }
+
+    /**
+     * Removes ArticleImage model and image files
+     *
+     * @param $id
+     * @param $languageId
+     * @return string|\yii\web\Response
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
@@ -375,6 +422,7 @@ class ArticleController extends Controller
     {
         if (!empty($id)) {
             $image = ArticleImage::findOne($id);
+
             if (!empty($image)) {
                 $article = Article::findOne($image->article_id);
 
@@ -392,11 +440,12 @@ class ArticleController extends Controller
                     return $this->redirect(\Yii::$app->request->referrer);
                 } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
             }
-        } else throw new NotFoundHttpException();
+        }
+        throw new NotFoundHttpException();
     }
 
     /**
-     * @param integer $id           ID of article
+     * @param integer $id ID of article
      * @param integer $languageId
      * @return mixed
      * @throws ForbiddenHttpException
@@ -480,9 +529,7 @@ class ArticleController extends Controller
                     'viewName' => 'add-video',
                     'params' => $params]);
             } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
-        }
-
-        else throw new NotFoundHttpException();
+        } else throw new NotFoundHttpException();
     }
 
     /**
