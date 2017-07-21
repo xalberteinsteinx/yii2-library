@@ -5,6 +5,7 @@ namespace xalberteinsteinx\library\common\entities;
 use bl\multilang\entities\Language;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\Inflector;
 
 /**
  * This is the model class for table "article_translation".
@@ -43,7 +44,7 @@ class ArticleTranslation extends ActiveRecord
     public function rules()
     {
         return [
-            [['article_id', 'language_id', 'title', 'alias'], 'required'],
+            [['article_id', 'language_id', 'title'], 'required'],
             [['article_id', 'language_id'], 'integer'],
             [['intro_text', 'full_text'], 'string'],
             [['title', 'meta_author', 'meta_copyright', 'alias'], 'string', 'max' => 255],
@@ -91,5 +92,20 @@ class ArticleTranslation extends ActiveRecord
     public function getLanguage()
     {
         return $this->hasOne(Language::className(), ['id' => 'language_id']);
+    }
+
+    /**
+     * Generates alias from title
+     * @param $title
+     * @return string
+     */
+    public static function generateAlias($title)
+    {
+        $newAlias = Inflector::slug($title);
+        $existingAlias = ArticleTranslation::find()
+            ->where(['alias' => $newAlias])
+            ->one();
+        if (!empty($existingAlias)) $newAlias = $newAlias . '-' . date("d-m-y-H-i-s");
+        return $newAlias;
     }
 }
