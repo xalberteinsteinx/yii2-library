@@ -95,7 +95,7 @@ class ArticleController extends Controller
     {
         $selectedLanguage = (!empty($languageId)) ? Language::findOne($languageId) : Language::getCurrent();
 
-        //Getting or creating Product and ProductTranslation models
+        //Getting or creating Article and ArticleTranslation models
         if (!empty($id)) {
             $article = Article::findOne($id);
             if (!empty($article)) {
@@ -181,7 +181,6 @@ class ArticleController extends Controller
             ]);
         }
     }
-
 
     /**
      * Changes article position to up

@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php Pjax::begin([
-    'id' => 'p-products',
+    'id' => 'p-articles',
     'linkSelector' => '.pjax',
     'enablePushState' => false
 ]); ?>

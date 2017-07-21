@@ -8,7 +8,7 @@
  */
 use yii\widgets\Pjax;
 
-$this->title = \Yii::t('shop', ($article->isNewRecord) ? 'Creating a new article' : 'Changing the article');
+$this->title = \Yii::t('library', ($article->isNewRecord) ? 'Creating a new article' : 'Changing the article');
 
 $this->params['breadcrumbs'] = [
     Yii::t('library', 'Library'),
@@ -25,13 +25,13 @@ $this->params['breadcrumbs'][] = (!empty($article->translation)) ?
 ?>
 
 <!--BODY PANEL-->
-<?php //Pjax::begin([
-//    'id' => 'p-article-save',
-//    'linkSelector' => '.p-article-save',
-//    'submitEvent' => 'change-product-page',
-//]); ?>
+<?php Pjax::begin([
+    'id' => 'p-article-save',
+    'linkSelector' => '.p-article-save',
+    'submitEvent' => 'change-product-page',
+]); ?>
 
     <!--CONTENT-->
 <?= $this->render($viewName, $params); ?>
 
-<?php //Pjax::end(); ?>
+<?php Pjax::end(); ?>

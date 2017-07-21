@@ -2,9 +2,9 @@
 /**
  * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
  *
- * @var $selectedLanguage       \bl\multilang\entities\Language
- * @var $article                \xalberteinsteinx\library\common\entities\Article
- * @var $articleTranslation     \xalberteinsteinx\library\common\entities\ArticleTranslation
+ * @var $selectedLanguage           \bl\multilang\entities\Language
+ * @var $category                   \xalberteinsteinx\library\common\entities\ArticleCategory
+ * @var $categoryTranslation        \xalberteinsteinx\library\common\entities\ArticleCategoryTranslation
  */
 
 use marqu3s\summernote\Summernote;
@@ -15,14 +15,13 @@ use yii\helpers\{
     Html, Url
 };
 use yii\widgets\ActiveForm;
-
 $selectedLanguageId = $selectedLanguage->id;
 
 ?>
 
 <!--Tabs-->
 <?= $this->render('_tabs', [
-    'article' => $article,
+    'category' => $category,
     'selectedLanguage' => $selectedLanguage
 ]); ?>
 
@@ -33,7 +32,7 @@ $selectedLanguageId = $selectedLanguage->id;
         'enableClientValidation' => true,
         'action' => [
             'save',
-            'id' => $article->id,
+            'id' => $category->id,
             'languageId' => $selectedLanguageId
         ]]);
     ?>
@@ -57,11 +56,11 @@ $selectedLanguageId = $selectedLanguage->id;
             ]); ?>
 
             <!--VIEW ON SITE-->
-            <?php if (!empty($article->translation)) : ?>
+            <?php if (!empty($category->translation)) : ?>
                 <?= Html::a(
                     Html::tag('span', FA::i(FA::_EXTERNAL_LINK) . Yii::t('shop', 'View on website')),
                     (Yii::$app->get('urlManagerFrontend'))
-                        ->createAbsoluteUrl(['/library/article/show', 'id' => $article->id, 'languageId' => $selectedLanguage->id], true), [
+                        ->createAbsoluteUrl(['/library/category/show', 'id' => $category->id, 'languageId' => $selectedLanguage->id], true), [
                     'class' => 'btn btn-info btn-xs',
                     'target' => '_blank'
                 ]); ?>
@@ -78,7 +77,7 @@ $selectedLanguageId = $selectedLanguage->id;
     <div id="basic">
 
         <!--TITLE-->
-        <?= $form->field($articleTranslation, 'title', [
+        <?= $form->field($categoryTranslation, 'title', [
             'inputOptions' => [
                 'class' => 'form-control'
             ]
@@ -87,12 +86,12 @@ $selectedLanguageId = $selectedLanguage->id;
         <div class="row">
             <div class="col-md-6">
                 <!--CATEGORY-->
-                <label><?= \Yii::t('library', 'Category'); ?></label>
+                <label><?= \Yii::t('library', 'Parent'); ?></label>
                 <?= \xalberteinsteinx\library\backend\widgets\InputTree::widget([
                     'className' => ArticleCategory::className(),
                     'form' => $form,
-                    'model' => $article,
-                    'attribute' => 'category_id',
+                    'model' => $category,
+                    'attribute' => 'parent_id',
                     'languageId' => $selectedLanguageId
                 ]);
                 ?>
@@ -100,14 +99,21 @@ $selectedLanguageId = $selectedLanguage->id;
 
             <div class="col-md-6">
                 <!--KEY-->
-                <?= $form->field($article, 'key', [
+                <?= $form->field($category, 'key', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
                 ]);
                 ?>
                 <!--VIEW NAME-->
-                <?= $form->field($article, 'view_name', [
+                <?= $form->field($category, 'view_name', [
+                    'inputOptions' => [
+                        'class' => 'form-control'
+                    ]
+                ]);
+                ?>
+                <!--VIEW NAME-->
+                <?= $form->field($category, 'article_view_name', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
@@ -115,7 +121,7 @@ $selectedLanguageId = $selectedLanguage->id;
                 ?>
 
                 <!--PUBLISH AT-->
-                <?= $form->field($article, 'publish_at', [
+                <?= $form->field($category, 'publish_at', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
@@ -123,8 +129,8 @@ $selectedLanguageId = $selectedLanguage->id;
 
                 <!--SHOW-->
                 <div style="display: inline-block;">
-                    <?php $article->show = ($article->isNewRecord) ? true : $article->show; ?>
-                    <?= $form->field($article, 'show', [
+                    <?php $category->show = ($category->isNewRecord) ? true : $category->show; ?>
+                    <?= $form->field($category, 'show', [
                         'inputOptions' => [
                             'class' => '']
                     ])->checkbox(); ?>
@@ -136,7 +142,7 @@ $selectedLanguageId = $selectedLanguage->id;
         <h2><?= \Yii::t('library', 'Texts'); ?></h2>
 
         <!--INTRO TEXT-->
-        <?= $form->field($articleTranslation, 'intro_text', [
+        <?= $form->field($categoryTranslation, 'intro_text', [
             'inputOptions' => [
                 'class' => 'form-control'
             ]
@@ -144,7 +150,7 @@ $selectedLanguageId = $selectedLanguage->id;
         ?>
 
         <!--FULL TEXT-->
-        <?= $form->field($articleTranslation, 'full_text', [
+        <?= $form->field($categoryTranslation, 'full_text', [
             'inputOptions' => [
                 'class' => 'form-control'
             ]
@@ -155,7 +161,7 @@ $selectedLanguageId = $selectedLanguage->id;
         <h2><?= \Yii::t('library', 'SEO options'); ?></h2>
 
         <div class="seo-url">
-            <?= $form->field($articleTranslation, 'alias', [
+            <?= $form->field($categoryTranslation, 'alias', [
                 'inputOptions' => [
                     'class' => 'form-control'
                 ],
@@ -167,7 +173,7 @@ $selectedLanguageId = $selectedLanguage->id;
             ]); ?>
         </div>
 
-        <?= $form->field($articleTranslation, 'seo_title', [
+        <?= $form->field($categoryTranslation, 'seo_title', [
             'inputOptions' => [
                 'class' => 'form-control'
             ]
@@ -176,14 +182,14 @@ $selectedLanguageId = $selectedLanguage->id;
         <div class="row">
 
             <div class="col-md-6">
-                <?= $form->field($articleTranslation, 'meta_robots', [
+                <?= $form->field($categoryTranslation, 'meta_robots', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
                 ]); ?>
             </div>
             <div class="col-md-6">
-                <?= $form->field($articleTranslation, 'meta_author', [
+                <?= $form->field($categoryTranslation, 'meta_author', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
@@ -192,14 +198,14 @@ $selectedLanguageId = $selectedLanguage->id;
         </div>
         <div class="row">
             <div class="col-md-6">
-                <?= $form->field($articleTranslation, 'meta_keywords', [
+                <?= $form->field($categoryTranslation, 'meta_keywords', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
                 ])->textarea(['rows' => 3]); ?>
             </div>
             <div class="col-md-6">
-                <?= $form->field($articleTranslation, 'meta_description', [
+                <?= $form->field($categoryTranslation, 'meta_description', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
@@ -207,10 +213,9 @@ $selectedLanguageId = $selectedLanguage->id;
             </div>
         </div>
 
-        </div>
-            <div class="row">
+        <div class="row">
             <div class="col-md-6">
-                <?= $form->field($articleTranslation, 'meta_copyright', [
+                <?= $form->field($categoryTranslation, 'meta_copyright', [
                     'inputOptions' => [
                         'class' => 'form-control'
                     ]
@@ -228,36 +233,35 @@ $selectedLanguageId = $selectedLanguage->id;
             ]); ?>
         </section>
 
-    <?php if (!$article->isNewRecord): ?>
-        <div class="created-by">
-            <p>
-                <b>
-                    <?= \Yii::t('library', 'Created by'); ?>:
-                </b>
-                <?= $article->user->email ?? ''; ?>
-            </p>
-            <p>
-                <b>
-                    <?= \Yii::t('library', 'Created at'); ?>:
-                </b>
-                <?= $article->created_at; ?>
-            </p>
-            <p>
-                <b>
-                    <?= \Yii::t('library', 'Updated at'); ?>:
-                </b>
-                <?= $article->updated_at; ?>
-            </p>
-            <p>
-                <b>
-                    <?= \Yii::t('library', 'Shows'); ?>:
-                </b>
-                <?= $article->hits ?? 0; ?>
-            </p>
-        </div>
-    <?php endif; ?>
+        <?php if (!$category->isNewRecord): ?>
+            <div class="created-by">
+                <p>
+                    <b>
+                        <?= \Yii::t('library', 'Created by'); ?>:
+                    </b>
+                    <?= $category->user->email ?? ''; ?>
+                </p>
+                <p>
+                    <b>
+                        <?= \Yii::t('library', 'Created at'); ?>:
+                    </b>
+                    <?= $category->created_at; ?>
+                </p>
+                <p>
+                    <b>
+                        <?= \Yii::t('library', 'Updated at'); ?>:
+                    </b>
+                    <?= $category->updated_at; ?>
+                </p>
+                <p>
+                    <b>
+                        <?= \Yii::t('library', 'Shows'); ?>:
+                    </b>
+                    <?= $category->hits ?? 0; ?>
+                </p>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php $form::end(); ?>
-
 </div>
