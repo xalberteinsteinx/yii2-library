@@ -127,17 +127,11 @@ class ArticleController extends Controller
 
                 if ($article->isNewRecord) {
                     $article->user_id = Yii::$app->user->id;
-
-                    if ($article->validate()) $article->save();
-                    else Yii::$app->session->setFlash(
+                }
+                if (!$article->validate())
+                    Yii::$app->session->setFlash(
                         'error',
                         \Yii::t('library', 'An error occurred during the save of the article'));
-                } else {
-                    if (!$article->validate())
-                        Yii::$app->session->setFlash(
-                            'error',
-                            \Yii::t('library', 'An error occurred during the save of the article'));
-                }
 
                 if ($articleTranslation->load($post)) {
 

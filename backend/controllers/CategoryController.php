@@ -12,7 +12,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii2tech\ar\position\PositionBehavior;
 
 /**
  * ArticleCategoryController implements the CRUD actions for ArticleCategory model.
@@ -108,16 +108,11 @@ class CategoryController extends Controller
 
                 if ($articleCategory->isNewRecord) {
                     $articleCategory->user_id = Yii::$app->user->id;
-
-                    if ($articleCategory->validate()) $articleCategory->save();
-                    else Yii::$app->session->setFlash(
+                }
+                if (!$articleCategory->validate()) {
+                    Yii::$app->session->setFlash(
                         'error',
                         \Yii::t('library', 'An error occurred during the save of the category'));
-                } else {
-                    if (!$articleCategory->validate())
-                        Yii::$app->session->setFlash(
-                            'error',
-                            \Yii::t('library', 'An error occurred during the save of the category'));
                 }
 
                 if ($articleCategoryTranslation->load($post)) {
@@ -162,5 +157,68 @@ class CategoryController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * Changes article position to up
+     *
+     * @param integer $id
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionUp($id)
+    {
+        $category = ArticleCategory::findOne($id);
+        if (!empty($category)) {
+            /**
+             * @var $category PositionBehavior
+             */
+            $category->movePrev();
+        }
+        if (\Yii::$app->request->isPjax) return $this->actionIndex();
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    /**
+     * Changes category position to down
+     *
+     * @param integer $id
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionDown($id)
+    {
+        $category = ArticleCategory::findOne($id);
+        if (!empty($category)) {
+            /**
+             * @var $category PositionBehavior
+             */
+            $category->moveNext();
+        }
+        if (\Yii::$app->request->isPjax) return $this->actionIndex();
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    /**
+     * Deletes an existing ArticleCategory model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed|\yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDelete($id)
+    {
+        $category = ArticleCategory::findOne($id);
+        if (empty($category)) throw new NotFoundHttpException();
+        $category->delete();
+
+        \Yii::$app->session->setFlash('success', Yii::t('library', 'You have successfully removed this category'));
+
+        if (\Yii::$app->request->isPjax) return $this->actionIndex();
+        return $this->redirect('index');
+    }
+
+
 
 }
