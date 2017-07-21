@@ -96,7 +96,6 @@ class ArticleImage extends ActiveRecord
         return $this->hasMany(ArticleImageTranslation::className(), ['article_image_id' => 'id']);
     }
 
-
     /**
      * @param string $size image size.
      * @return string path to product image.

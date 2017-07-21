@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $image_id
  * @property integer $language_id
- * @property string $alt-text
+ * @property string $alt_text
  *
  * @property ArticleCategoryImage $image
  * @property Language $language
@@ -35,7 +35,7 @@ class ArticleCategoryImageTranslation extends ActiveRecord
     {
         return [
             [['image_id', 'language_id'], 'integer'],
-            [['alt-text'], 'string', 'max' => 255],
+            [['alt_text'], 'string', 'max' => 255],
             [['image_id'], 'exist', 'skipOnError' => true, 'targetClass' => ArticleCategoryImage::className(), 'targetAttribute' => ['image_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'id']],
         ];
