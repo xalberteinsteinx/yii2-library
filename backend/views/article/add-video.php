@@ -25,12 +25,12 @@ use yii\widgets\Pjax;
 
 <div class="box padding20">
 
-<!--    --><?php //Pjax::begin([
-//        'id' => 'p-article-video-' . $article->id,
-//        'enablePushState' => false,
-//        'enableReplaceState' => false,
-////        'submitEvent' => 'change-video-table',
-//    ]); ?>
+    <?php Pjax::begin([
+        'id' => 'p-article-video-' . $article->id,
+        'enablePushState' => false,
+        'enableReplaceState' => false,
+//        'submitEvent' => 'change-video-table',
+    ]); ?>
 
     <?php $addVideoForm = ActiveForm::begin([
         'action' => [
@@ -183,6 +183,6 @@ use yii\widgets\Pjax;
         <?php endforeach; ?>
         </tbody>
     </table>
-<!--    --><?php //Pjax::end(); ?>
+    <?php Pjax::end(); ?>
 
 </div>

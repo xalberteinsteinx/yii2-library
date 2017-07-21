@@ -36,7 +36,7 @@ $selectedLanguageId = $selectedLanguage->id;
                     \Yii::t('library', 'Images'),
                     Url::to(['add-image', 'id' => $article->id, 'languageId' => $selectedLanguageId]),
                     [
-                        'class' => 'pjax'
+                        'class' => 'p-article-save'
                     ]); ?>
         </li>
 
@@ -52,7 +52,7 @@ $selectedLanguageId = $selectedLanguage->id;
                     \Yii::t('library', 'Video'),
                         Url::to(['add-video', 'id' => $article->id, 'languageId' => $selectedLanguageId]),
                     [
-                        'class' => 'pjax'
+                        'class' => 'p-article-save'
                     ]); ?>
         </li>
     </ul>

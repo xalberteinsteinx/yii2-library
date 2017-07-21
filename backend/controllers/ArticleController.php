@@ -3,7 +3,10 @@
 namespace xalberteinsteinx\library\backend\controllers;
 
 use bl\multilang\entities\Language;
+use xalberteinsteinx\library\backend\components\forms\ArticleImageForm;
 use xalberteinsteinx\library\backend\components\forms\ArticleVideoForm;
+use xalberteinsteinx\library\common\entities\ArticleImage;
+use xalberteinsteinx\library\common\entities\ArticleImageTranslation;
 use xalberteinsteinx\library\common\entities\ArticleTranslation;
 use xalberteinsteinx\library\common\entities\ArticleVideo;
 use Yii;
@@ -259,6 +262,106 @@ class ArticleController extends Controller
         return $newAlias;
     }
 
+    /**
+     * @param $id
+     * @param $languageId
+     * @return string
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionAddImage($id, $languageId)
+    {
+        $article = Article::findOne($id);
+        $modifiedElement = null;
+        if (empty($article)) throw new NotFoundHttpException();
+        if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+            $image_form = new ArticleImageForm();
+            $image = new ArticleImage();
+            $imageTranslation = new ArticleImageTranslation();
+
+            if (Yii::$app->request->isPost) {
+                $image_form->load(Yii::$app->request->post());
+                $image_form->image = UploadedFile::getInstance($image_form, 'image');
+                if (!empty($image_form->image)) {
+                    if ($uploadedImageName = $image_form->upload()) {
+                        $image->image_name = $uploadedImageName;
+                        $imageTranslation->alt_text = $image_form->alt2;
+                        $image->article_id = $id;
+
+                        if ($image->validate()) {
+                            $image->save();
+                            $imageTranslation->article_image_id = $image->id;
+                            $imageTranslation->language_id = $languageId;
+                            if ($imageTranslation->validate()) {
+                                $imageTranslation->save();
+                            }
+                        }
+                    }
+                }
+                if (!empty($image_form->link)) {
+                    $image_name = $image_form->copy($image_form->link);
+                    $image->image_name = $image_name;
+                    $imageTranslation->alt_text = $image_form->alt1;
+                    $image->article_id = $id;
+                    if ($image->validate()) {
+                        $image->save();
+                        $imageTranslation->article_image_id = $image->id;
+                        $imageTranslation->language_id = $languageId;
+                        if ($imageTranslation->validate()) {
+                            $imageTranslation->save();
+                        }
+                    }
+                }
+            }
+            $params = [
+                'selectedLanguage' => Language::findOne($languageId),
+                'article' => $article,
+                'image_form' => new ArticleImageForm(),
+            ];
+            if (Yii::$app->request->isPjax) {
+                return $this->renderPartial('add-image', $params);
+            }
+            return $this->render('save', [
+                'article' => $article,
+                'viewName' => 'add-image',
+                'params' => $params
+            ]);
+        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+    }
+
+    /**
+     * @param $id
+     * @param $languageId
+     * @return string|\yii\web\Response
+     */
+    public function actionEditImage($id, $languageId)
+    {
+        if (Yii::$app->request->isPost) {
+            $image = ArticleImage::findOne($id);
+            $imageTranslation = ArticleImageTranslation::find()->where([
+                'article_image_id' => $id,
+                'language_id' => $languageId
+            ])->one();
+            if (empty($imageTranslation)) {
+                $imageTranslation = new ArticleImageTranslation();
+            }
+            $imageTranslation->load(Yii::$app->request->post());
+            $imageTranslation->article_image_id = $id;
+            $imageTranslation->language_id = $languageId;
+            if ($imageTranslation->validate()) {
+                $imageTranslation->save();
+                if (Yii::$app->request->isPjax) {
+                    $article = $image->article;
+                    return $this->renderPartial('add-image', [
+                        'selectedLanguage' => Language::findOne($languageId),
+                        'article' => $article,
+                        'image_form' => new ArticleImageForm(),
+                    ]);
+                }
+            } else \Yii::$app->session->setFlash('error', \Yii::t('shop', 'Edit image error'));
+        }
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
 
     /**
      * @param integer $id           ID of article

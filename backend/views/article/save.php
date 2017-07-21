@@ -25,13 +25,13 @@ $this->params['breadcrumbs'][] = (!empty($article->translation)) ?
 ?>
 
 <!--BODY PANEL-->
-<?php Pjax::begin([
-    'id' => 'p-product-save',
-    'linkSelector' => '.pjax',
-    'submitEvent' => 'change-product-page',
-]); ?>
+<?php //Pjax::begin([
+//    'id' => 'p-article-save',
+//    'linkSelector' => '.p-article-save',
+//    'submitEvent' => 'change-product-page',
+//]); ?>
 
     <!--CONTENT-->
 <?= $this->render($viewName, $params); ?>
 
-<?php Pjax::end(); ?>
+<?php //Pjax::end(); ?>
