@@ -29,12 +29,12 @@ use yii2tech\ar\position\PositionBehavior;
  * @property ArticleCategory $category
  * @property User $user
  * @property ArticleAttachment[] $articleAttachments
- * @property ArticleImage[] $articleImages
+ * @property ArticleImage[] $images
  * @property ArticleRelatedArticle[] $articleRelatedArticles
  * @property ArticleRelatedArticle[] $articleRelatedArticles0
  * @property ArticleTagArticle[] $articleTagArticles
  * @property ArticleTranslation[] $articleTranslations
- * @property ArticleVideo[] $articleVideos
+ * @property ArticleVideo[] $videos
  */
 class Article extends ActiveRecord
 {
@@ -82,7 +82,7 @@ class Article extends ActiveRecord
     {
         return [
             [['category_id', 'user_id', 'position', 'hits', 'show'], 'integer'],
-            [['position', 'created_at', 'updated_at', 'publish_at'], 'required'],
+            [['position', 'publish_at'], 'required'],
             [['created_at', 'updated_at', 'publish_at'], 'safe'],
             [['key', 'view_name'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ArticleCategory::className(), 'targetAttribute' => ['category_id' => 'id']],
@@ -137,9 +137,9 @@ class Article extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleImages()
+    public function getImages()
     {
-        return $this->hasMany(ArticleImage::className(), ['article_id' => 'id']);
+        return $this->hasMany(ArticleImage::className(), ['article_id' => 'id'])->orderBy('position');
     }
 
     /**
@@ -177,8 +177,23 @@ class Article extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleVideos()
+    public function getVideos()
     {
-        return $this->hasMany(ArticleVideo::className(), ['article_id' => 'id']);
+        return $this->hasMany(ArticleVideo::className(), ['article_id' => 'id'])->orderBy('position');
+    }
+
+
+    /**
+     * Generates unique name by string.
+     * @param $baseName
+     * @return string
+     */
+    public static function generateImageName($baseName)
+    {
+        $fileName = hash('crc32', $baseName . time());
+        if (file_exists(Yii::getAlias('@frontend/web/images/library/' . $fileName . '-original.jpg'))) {
+            return static::generateImageName($baseName);
+        }
+        return $fileName;
     }
 }
