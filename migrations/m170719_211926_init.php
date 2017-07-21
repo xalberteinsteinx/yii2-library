@@ -92,6 +92,7 @@ class m170719_211926_init extends Migration
             'id' => $this->primaryKey(),
             'article_id' => $this->integer()->notNull(),
             'video_name' => $this->string()->notNull(),
+            'resource' => $this->string(),
             'position' => $this->integer()->notNull(),
             'auto_play' => $this->boolean()->notNull(),
             'loop' => $this->boolean()->notNull(),
