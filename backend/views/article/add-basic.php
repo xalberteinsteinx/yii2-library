@@ -17,6 +17,7 @@ use yii\helpers\{
 use yii\widgets\ActiveForm;
 
 $selectedLanguageId = $selectedLanguage->id;
+
 ?>
 
 <!--Tabs-->
@@ -131,7 +132,7 @@ $selectedLanguageId = $selectedLanguage->id;
             'inputOptions' => [
                 'class' => 'form-control'
             ]
-        ]);
+        ])->widget(Summernote::className());
         ?>
 
         <!--FULL TEXT-->
@@ -139,7 +140,7 @@ $selectedLanguageId = $selectedLanguage->id;
             'inputOptions' => [
                 'class' => 'form-control'
             ]
-        ]);
+        ])->widget(Summernote::className());
         ?>
 
         <!--SEO-->

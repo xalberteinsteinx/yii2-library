@@ -31,7 +31,7 @@ class ArticleController extends Controller
                 'rules' => [
                     [
                         'actions' => ['index'],
-                        'roles' => ['viewArticlesList'],
+                        'roles' => ['viewListOfArticles'],
                         'allow' => true,
                     ],
                     [
@@ -110,7 +110,7 @@ class ArticleController extends Controller
             if ($article->load($post)) {
                 $article->category_id = (!empty($article->category_id)) ? $article->category_id : NULL;
                 if ($article->isNewRecord) {
-                    $article->user = Yii::$app->user->id;
+                    $article->user_id = Yii::$app->user->id;
 
                     if ($article->validate()) $article->save();
                     else Yii::$app->session->setFlash(
@@ -160,54 +160,7 @@ class ArticleController extends Controller
     }
 
 
-    /**
-     * Displays a single Article model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
-    /**
-     * Creates a new Article model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Article();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Article model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Deletes an existing Article model.

@@ -14,6 +14,15 @@ class m210719_031326_rbac_init extends Migration
 
         /*ARTICLES*/
         /*Add permissions*/
+        $viewListOfArticles = $auth->createPermission('viewListOfArticles');
+        $viewListOfArticles->description = ('View list of articles');
+        $auth->add($viewListOfArticles);
+
+        $viewCompleteListOfArticles = $auth->createPermission('viewCompleteListOfArticles');
+        $viewCompleteListOfArticles->description = ('View complete list of articles');
+        $auth->add($viewCompleteListOfArticles);
+
+
         $createArticle = $auth->createPermission('createArticle');
         $createArticle->description = 'Create article';
         $auth->add($createArticle);
@@ -64,6 +73,10 @@ class m210719_031326_rbac_init extends Migration
         $auth->addChild($createArticleWithoutModeration, $createArticle);
         $auth->addChild($articleManager, $createArticleWithoutModeration);
         $auth->addChild($articleManager, $articlePartner);
+
+        $auth->addChild($articlePartner, $viewListOfArticles);
+        $auth->addChild($articleManager, $viewListOfArticles);
+        $auth->addChild($articleManager, $viewCompleteListOfArticles);
 
 
         /*CATEGORIES*/
