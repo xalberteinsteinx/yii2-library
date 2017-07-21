@@ -2,6 +2,7 @@
 
 namespace xalberteinsteinx\library\common\entities;
 
+use bl\imagable\helpers\FileHelper;
 use bl\multilang\behaviors\TranslationBehavior;
 use Yii;
 use yii\db\ActiveRecord;
@@ -57,9 +58,10 @@ class ArticleImage extends ActiveRecord
     public function rules()
     {
         return [
-            [['article_id', 'image_name', 'position', 'is_cover'], 'required'],
+            [['article_id', 'image_name'], 'required'],
             [['article_id', 'position', 'is_cover'], 'integer'],
             [['image_name'], 'string', 'max' => 255],
+            [['is_cover'], 'default', 'value' => 0],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::className(), 'targetAttribute' => ['article_id' => 'id']],
         ];
     }
@@ -92,5 +94,15 @@ class ArticleImage extends ActiveRecord
     public function getTranslations()
     {
         return $this->hasMany(ArticleImageTranslation::className(), ['article_image_id' => 'id']);
+    }
+
+
+    /**
+     * @param string $size image size.
+     * @return string path to product image.
+     */
+    public function getBySize($size = 'hd') {
+        $image = \Yii::$app->library_imagable->get('article', $size, $this->image_name);
+        return '/images/library/article/' . FileHelper::getFullName($image);
     }
 }
