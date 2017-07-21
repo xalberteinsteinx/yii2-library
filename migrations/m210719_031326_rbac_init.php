@@ -81,6 +81,9 @@ class m210719_031326_rbac_init extends Migration
 
         /*CATEGORIES*/
         /*Add permissions*/
+        $viewListOfCategories = $auth->createPermission('viewListOfCategories');
+        $viewListOfCategories->description = 'View list of categories';
+        $auth->add($viewListOfCategories);
         $createCategory = $auth->createPermission('createCategory');
         $createCategory->description = 'Create category';
         $auth->add($createCategory);
@@ -97,6 +100,7 @@ class m210719_031326_rbac_init extends Migration
         $articleCategoryManager->description = 'Article category manager';
         $auth->add($articleCategoryManager);
 
+        $auth->addChild($articleCategoryManager, $viewListOfCategories);
         $auth->addChild($articleCategoryManager, $createCategory);
         $auth->addChild($articleCategoryManager, $updateCategory);
         $auth->addChild($articleCategoryManager, $deleteCategory);

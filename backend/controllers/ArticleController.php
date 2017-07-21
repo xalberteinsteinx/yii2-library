@@ -42,11 +42,11 @@ class ArticleController extends Controller
                     [
                         'actions' => [
                             'save',
+                            'up', 'down', 'generate-seo-url',
                             'add-image', 'delete-image', 'edit-image',
+                            'image-up', 'image-down',
                             'add-video', 'delete-video',
                             'video-up', 'video-down',
-                            'image-up', 'image-down',
-                            'up', 'down', 'generate-seo-url',
                         ],
                         'roles' => ['createArticle', 'createArticleWithoutModeration',
                             'updateArticle', 'updateOwnArticle'],
