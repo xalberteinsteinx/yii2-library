@@ -247,7 +247,7 @@ class ArticleController extends Controller
 
             if (\Yii::$app->request->isPjax) return $this->actionIndex();
             return $this->redirect('index');
-        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to delete this article.'));
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to delete this article.'));
     }
 
     /**
@@ -326,7 +326,7 @@ class ArticleController extends Controller
                 'viewName' => 'add-image',
                 'params' => $params
             ]);
-        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
     }
 
     /**
@@ -358,9 +358,41 @@ class ArticleController extends Controller
                         'image_form' => new ArticleImageForm(),
                     ]);
                 }
-            } else \Yii::$app->session->setFlash('error', \Yii::t('shop', 'Edit image error'));
+            } else \Yii::$app->session->setFlash('error', \Yii::t('library', 'Edit image error'));
         }
         return $this->redirect(\Yii::$app->request->referrer);
+    }
+
+
+    /**
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteImage($id, $languageId)
+    {
+        if (!empty($id)) {
+            $image = ArticleImage::findOne($id);
+            if (!empty($image)) {
+                $article = Article::findOne($image->article_id);
+
+                if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
+                    $image->delete();
+                    \Yii::$app->get('library_imagable')->delete('article', $image->image_name);
+
+                    if (Yii::$app->request->isPjax) {
+                        return $this->renderPartial('add-image', [
+                            'selectedLanguage' => Language::findOne($languageId),
+                            'article' => $article,
+                            'image_form' => new ArticleImageForm(),
+                        ]);
+                    }
+                    return $this->redirect(\Yii::$app->request->referrer);
+                } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
+            }
+        } else throw new NotFoundHttpException();
     }
 
     /**
@@ -479,7 +511,7 @@ class ArticleController extends Controller
                 'video_form_upload' => new ArticleVideoForm(),
             ]);
             else return $this->redirect(\Yii::$app->request->referrer);
-        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
     }
 
     /**
@@ -508,7 +540,7 @@ class ArticleController extends Controller
                 'video_form_upload' => new ArticleVideoForm(),
             ]);
             else return $this->redirect(\Yii::$app->request->referrer);
-        } else throw new ForbiddenHttpException(\Yii::t('shop', 'You have not permission to do this action.'));
+        } else throw new ForbiddenHttpException(\Yii::t('library', 'You have not permission to do this action.'));
     }
 
     /**
