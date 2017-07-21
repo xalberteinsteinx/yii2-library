@@ -3,6 +3,9 @@
 namespace xalberteinsteinx\library\backend\controllers;
 
 use bl\multilang\entities\Language;
+use xalberteinsteinx\library\backend\components\forms\CategoryImageForm;
+use xalberteinsteinx\library\common\entities\ArticleCategoryImage;
+use xalberteinsteinx\library\common\entities\ArticleCategoryImageTranslation;
 use xalberteinsteinx\library\common\entities\ArticleCategoryTranslation;
 use Yii;
 use xalberteinsteinx\library\common\entities\ArticleCategory;
@@ -12,6 +15,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii2tech\ar\position\PositionBehavior;
 
 /**
@@ -220,5 +224,193 @@ class CategoryController extends Controller
     }
 
 
+    /**
+     * Generates seo Url from title on add-basic page
+     *
+     * @param string $title
+     * @return string
+     */
+    public function actionGenerateSeoUrl($title)
+    {
+        $newAlias = ArticleCategoryTranslation::generateAlias($title);
+        return $newAlias;
+    }
+
+    /**
+     * @param $id
+     * @param $languageId
+     * @return string
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionAddImage($id, $languageId)
+    {
+        $category = ArticleCategory::findOne($id);
+
+        if (empty($category)) throw new NotFoundHttpException();
+
+        $image_form = new CategoryImageForm();
+        $image = new ArticleCategoryImage();
+        $imageTranslation = new ArticleCategoryImageTranslation();
+
+            if (Yii::$app->request->isPost) {
+                $image_form->load(Yii::$app->request->post());
+                $image_form->image = UploadedFile::getInstance($image_form, 'image');
+                if (!empty($image_form->image)) {
+                    if ($uploadedImageName = $image_form->upload()) {
+                        $image->image_name = $uploadedImageName;
+                        $imageTranslation->alt_text = $image_form->alt2;
+                        $image->article_category_id = $id;
+
+                        if ($image->validate()) {
+                            $image->save();
+                            $imageTranslation->image_id = $image->id;
+                            $imageTranslation->language_id = $languageId;
+                            if ($imageTranslation->validate()) {
+                                $imageTranslation->save();
+                            }
+                        }
+                        else Yii::$app->session->setFlash('error', Yii::t('library', 'Error during the saving image'));
+                    }
+                }
+                if (!empty($image_form->link)) {
+                    $image_name = $image_form->copy($image_form->link);
+                    $image->image_name = $image_name;
+                    $imageTranslation->alt_text = $image_form->alt1;
+                    $image->article_category_id = $id;
+                    if ($image->validate()) {
+                        $image->save();
+                        $imageTranslation->image_id = $image->id;
+                        $imageTranslation->language_id = $languageId;
+                        if ($imageTranslation->validate()) {
+                            $imageTranslation->save();
+                        }
+                    }
+                    else Yii::$app->session->setFlash('error', Yii::t('library', 'Error during the saving image'));
+                }
+            }
+            $params = [
+                'selectedLanguage' => Language::findOne($languageId),
+                'category' => $category,
+                'image_form' => new CategoryImageForm(),
+            ];
+            if (Yii::$app->request->isPjax) {
+                return $this->renderPartial('add-image', $params);
+            }
+            return $this->render('save', [
+                'category' => $category,
+                'viewName' => 'add-image',
+                'params' => $params
+            ]);
+    }
+
+    /**
+     * @param $id
+     * @param $languageId
+     * @return string|\yii\web\Response
+     */
+    public function actionEditImage($id, $languageId)
+    {
+        if (Yii::$app->request->isPost) {
+            $image = ArticleCategoryImage::findOne($id);
+            $imageTranslation = ArticleCategoryImageTranslation::find()->where([
+                'image_id' => $id,
+                'language_id' => $languageId
+            ])->one();
+            if (empty($imageTranslation)) {
+                $imageTranslation = new ArticleCategoryImageTranslation();
+            }
+            $imageTranslation->load(Yii::$app->request->post());
+            $imageTranslation->image_id = $id;
+            $imageTranslation->language_id = $languageId;
+            if ($imageTranslation->validate()) {
+                $imageTranslation->save();
+                if (Yii::$app->request->isPjax) {
+                    $category = $image->category;
+                    return $this->renderPartial('add-image', [
+                        'selectedLanguage' => Language::findOne($languageId),
+                        'category' => $category,
+                        'image_form' => new ArticleCategoryImage(),
+                    ]);
+                }
+            } else \Yii::$app->session->setFlash('error', \Yii::t('library', 'Edit image error'));
+        }
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    /**
+     * Changes ArticleCategoryImage model position property to down
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionImageDown($id, $languageId)
+    {
+        $image = ArticleCategoryImage::findOne($id);
+        if (!empty($image)) {
+
+            /**
+             * @var $image PositionBehavior|ArticleCategoryImage
+             */
+            $image->moveNext();
+        }
+        return $this->actionAddImage($image->article_category_id, $languageId);
+    }
+
+    /**
+     * Changes ArticleCategoryImage model position property to up
+     *
+     * @param integer $id
+     * @param integer $languageId
+     * @return mixed
+     * @throws ForbiddenHttpException
+     */
+    public function actionImageUp($id, $languageId)
+    {
+        $image = ArticleCategoryImage::findOne($id);
+        if (!empty($image)) {
+
+            /**
+             * @var $image PositionBehavior|ArticleCategoryImage
+             */
+            $image->movePrev();
+        }
+        return $this->actionAddImage($image->article_category_id, $languageId);
+    }
+
+    /**
+     * Removes ArticleImage model and image files
+     *
+     * @param $id
+     * @param $languageId
+     * @return string|\yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteImage($id, $languageId)
+    {
+        if (!empty($id)) {
+            $image = ArticleCategoryImage::findOne($id);
+
+            if (!empty($image)) {
+                $category = ArticleCategory::findOne($image->article_category_id);
+
+                $image->delete();
+                \Yii::$app->get('library_imagable')->delete('category', $image->image_name);
+
+                if (Yii::$app->request->isPjax) {
+                    return $this->renderPartial('add-image', [
+                        'selectedLanguage' => Language::findOne($languageId),
+                        'category' => $category,
+                        'image_form' => new CategoryImageForm(),
+                    ]);
+                }
+                return $this->redirect(\Yii::$app->request->referrer);
+            }
+        }
+        throw new NotFoundHttpException();
+    }
 
 }

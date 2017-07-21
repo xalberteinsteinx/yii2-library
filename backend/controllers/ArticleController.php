@@ -264,7 +264,7 @@ class ArticleController extends Controller
     public function actionAddImage($id, $languageId)
     {
         $article = Article::findOne($id);
-        $modifiedElement = null;
+
         if (empty($article)) throw new NotFoundHttpException();
         if (\Yii::$app->user->can('updateArticle', ['articleOwner' => $article->user_id])) {
             $image_form = new ArticleImageForm();
@@ -354,7 +354,6 @@ class ArticleController extends Controller
         }
         return $this->redirect(\Yii::$app->request->referrer);
     }
-
 
     /**
      * Changes ArticleImage model position property to down
