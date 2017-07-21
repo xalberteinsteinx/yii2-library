@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
  */
 class InputTreeAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/xalberteinsteinx/yii2-library/widgets/assets/src';
+    public $sourcePath = '@vendor/xalberteinsteinx/yii2-library/backend/widgets/assets/src';
     public $css = [
         'css/input-tree.css'
     ];
