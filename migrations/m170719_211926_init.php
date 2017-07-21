@@ -26,6 +26,12 @@ class m170719_211926_init extends Migration
             'updated_at' => $this->timestamp()->notNull(),
             'publish_at' => $this->timestamp()->notNull()
         ]);
+        $this->createTable('{{%article_category_image}}', [
+            'id' => $this->primaryKey(),
+            'article_category_id' => $this->integer(),
+            'key' => $this->string(),
+            'position' => $this->integer()->notNull(),
+        ]);
         $this->createTable('{{%article_category_translation}}', [
             'id' => $this->primaryKey(),
             'article_category_id' => $this->integer()->notNull(),
@@ -158,6 +164,9 @@ class m170719_211926_init extends Migration
         $this->addForeignKey('{{%fk_articleCategory_article}}',
             '{{%article_category}}', 'parent_id',
             '{{%article_category}}', 'id', 'SET NULL');
+        $this->addForeignKey('{{%fk_articleCategoryImage_articleCategory}}',
+            '{{%article_category_image}}', 'article_category_id',
+            '{{%article_category}}', 'id', 'CASCADE');
         $this->addForeignKey('{{%fk_articleCategory_user}}',
             '{{%article_category}}', 'user_id',
             'user', 'id', 'SET NULL');
