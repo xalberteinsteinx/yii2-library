@@ -38,7 +38,7 @@ class m170719_211926_init extends Migration
             'id' => $this->primaryKey(),
             'image_id' => $this->integer(),
             'language_id' => $this->integer(),
-            'alt-text' => $this->string(),
+            'alt_text' => $this->string(),
         ]);
         $this->createTable('{{%article_category_translation}}', [
             'id' => $this->primaryKey(),
