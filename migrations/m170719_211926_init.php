@@ -29,8 +29,16 @@ class m170719_211926_init extends Migration
         $this->createTable('{{%article_category_image}}', [
             'id' => $this->primaryKey(),
             'article_category_id' => $this->integer(),
+            'image_name' => $this->string(),
             'key' => $this->string(),
             'position' => $this->integer()->notNull(),
+            'is_cover' => $this->boolean()
+        ]);
+        $this->createTable('{{%article_category_image_translation}}', [
+            'id' => $this->primaryKey(),
+            'image_id' => $this->integer(),
+            'language_id' => $this->integer(),
+            'alt-text' => $this->string(),
         ]);
         $this->createTable('{{%article_category_translation}}', [
             'id' => $this->primaryKey(),
@@ -164,12 +172,19 @@ class m170719_211926_init extends Migration
         $this->addForeignKey('{{%fk_articleCategory_article}}',
             '{{%article_category}}', 'parent_id',
             '{{%article_category}}', 'id', 'SET NULL');
-        $this->addForeignKey('{{%fk_articleCategoryImage_articleCategory}}',
-            '{{%article_category_image}}', 'article_category_id',
-            '{{%article_category}}', 'id', 'CASCADE');
         $this->addForeignKey('{{%fk_articleCategory_user}}',
             '{{%article_category}}', 'user_id',
             'user', 'id', 'SET NULL');
+
+        $this->addForeignKey('{{%fk_articleCategoryImage_articleCategory}}',
+            '{{%article_category_image}}', 'article_category_id',
+            '{{%article_category}}', 'id', 'CASCADE');
+        $this->addForeignKey('{{%fk_articleCategoryImageTranslation_articleCategoryImage}}',
+            '{{%article_category_image_translation}}', 'image_id',
+            '{{%article_category_image}}', 'id', 'CASCADE');
+        $this->addForeignKey('{{%fk_articleCategoryImageTranslation_language}}',
+            '{{%article_category_image_translation}}', 'language_id',
+            'language', 'id', 'CASCADE');
 
         $this->addForeignKey('{{%fk_articleCategoryTranslation_articleCategory}}',
             '{{%article_category_translation}}', 'article_category_id',
@@ -260,6 +275,7 @@ class m170719_211926_init extends Migration
         $this->dropTable('{{%article_translation}}');
         $this->dropTable('{{%article}}');
         $this->dropTable('{{%article_category_translation}}');
+        $this->dropTable('{{%article_category_image}}');
         $this->dropTable('{{%article_category}}');
     }
 

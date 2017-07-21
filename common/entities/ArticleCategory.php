@@ -31,6 +31,7 @@ use yii2tech\ar\position\PositionBehavior;
  * @property ArticleCategory $parent
  * @property ArticleCategory[] $articleCategories
  * @property User $user
+ * @property ArticleCategoryImage[] $articleCategoryImages
  * @property ArticleCategoryTranslation[] $articleCategoryTranslations
  */
 class ArticleCategory extends ActiveRecord
@@ -138,6 +139,14 @@ class ArticleCategory extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArticleCategoryImages()
+    {
+        return $this->hasMany(ArticleCategoryImage::className(), ['article_category_id' => 'id']);
     }
 
     /**
