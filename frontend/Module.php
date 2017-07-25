@@ -1,5 +1,5 @@
 <?php
-namespace xalberteinsteinx\shop\frontend;
+namespace xalberteinsteinx\library\frontend;
 use Yii;
 
 /**
