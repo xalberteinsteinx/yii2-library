@@ -121,9 +121,14 @@ class ArticleController extends Controller
                 $article->category_id = (!empty($article->category_id)) ? $article->category_id : NULL;
 
                 /*Position*/
+                $positionQuery = Article::find()->select('position');
                 if ($article->category_id == null) {
-                    $article->position = Article::find()->select('position')->where(['category_id' => null])->max('position') + 1;
+                    $positionQuery->where(['category_id' => null]);
                 }
+                else {
+                    $positionQuery->where(['category_id' => $article->category_id]);
+                }
+                $article->position = $positionQuery->max('position') + 1;
 
                 if ($article->isNewRecord) {
                     $article->user_id = Yii::$app->user->id;
