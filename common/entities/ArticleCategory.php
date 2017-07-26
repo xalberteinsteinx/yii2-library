@@ -119,6 +119,15 @@ class ArticleCategory extends ActiveRecord
     }
 
     /**
+     * @return boolean
+     */
+    public function hasArticles()
+    {
+        $articles = Article::find()->where(['category_id' => $this->id])->select('id')->one();
+        return boolval($articles);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getParent()
