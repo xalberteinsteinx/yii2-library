@@ -1,5 +1,5 @@
 <?php
-namespace xalberteinsteinx\library\frontend\widgets
+namespace xalberteinsteinx\library\frontend\widgets;
 
 use yii\helpers\Html;
 use xalberteinsteinx\library\common\entities\Article;
@@ -116,7 +116,7 @@ class ImageSlider extends Slick
      */
     protected function renderItem($item)
     {
-        $img = (!empty($item->getImage($this->imagesSize))) ? $item->getImage($this->imagesSize) : '';
+        $img = (!empty($item->getBySize($this->imagesSize))) ? $item->getBySize($this->imagesSize) : '';
         $alt = (!empty($item->translation->alt)) ? $item->translation->alt : '';
         if($this->fancyBox) {
             return Html::a(Html::img($img), $img, ['rel' => "article-image-fancybox"]);
