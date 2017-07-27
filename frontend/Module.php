@@ -14,6 +14,18 @@ class Module extends \yii\base\Module
      */
     public $controllerNamespace = 'xalberteinsteinx\library\frontend\controllers';
 
+    /**
+     * If enable page with all categories will be existing
+     * @var bool
+     */
+    public $enableIndexCategoryAction = false;
+
+    /**
+     * If enable page with all article will be existing
+     * @var bool
+     */
+    public $enableIndexArticleAction = false;
+
 
     /**
      * @inheritdoc
