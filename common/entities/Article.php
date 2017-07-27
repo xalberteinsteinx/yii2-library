@@ -144,6 +144,15 @@ class Article extends ActiveRecord
     }
 
     /**
+     * @return ArticleImage|ActiveRecord
+     */
+    public function getFirstImage()
+    {
+        $firstImage = ArticleImage::find()->where(['article_id' => $this->id])->one();
+        return $firstImage;
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getArticleRelatedArticles()

@@ -19,7 +19,8 @@ use yii\web\UploadedFile;
 use yii2tech\ar\position\PositionBehavior;
 
 /**
- * ArticleCategoryController implements the CRUD actions for ArticleCategory model.
+ * CategoryController implements the CRUD actions for ArticleCategory model.
+ * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
  */
 class CategoryController extends Controller
 {

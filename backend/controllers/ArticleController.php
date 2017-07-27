@@ -22,6 +22,7 @@ use yii2tech\ar\position\PositionBehavior;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
+ * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
  */
 class ArticleController extends Controller
 {
