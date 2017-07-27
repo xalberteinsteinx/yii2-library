@@ -136,9 +136,18 @@ class ArticleCategory extends ActiveRecord
     }
 
     /**
+     * @return boolean
+     */
+    public function hasChildCategories()
+    {
+        $childCategory = ArticleCategory::find()->select('id')->where(['parent_id' => $this->id])->one();
+        return boolval($childCategory);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleCategories()
+    public function getChildCategories()
     {
         return $this->hasMany(ArticleCategory::className(), ['parent_id' => 'id']);
     }
