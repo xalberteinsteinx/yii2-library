@@ -9,6 +9,7 @@
 
 use marqu3s\summernote\Summernote;
 use rmrevin\yii\fontawesome\FA;
+use xalberteinsteinx\library\backend\assets\LibraryAsset;
 use xalberteinsteinx\library\backend\widgets\LanguageSwitcher;
 use xalberteinsteinx\library\common\entities\ArticleCategory;
 use yii\helpers\{
@@ -17,6 +18,7 @@ use yii\helpers\{
 use yii\widgets\ActiveForm;
 $selectedLanguageId = $selectedLanguage->id;
 
+LibraryAsset::register($this);
 ?>
 
 <!--Tabs-->
@@ -79,6 +81,7 @@ $selectedLanguageId = $selectedLanguage->id;
         <!--TITLE-->
         <?= $form->field($categoryTranslation, 'title', [
             'inputOptions' => [
+                'id' => 'title-input',
                 'class' => 'form-control'
             ]
         ]); ?>
@@ -163,13 +166,14 @@ $selectedLanguageId = $selectedLanguage->id;
         <div class="seo-url">
             <?= $form->field($categoryTranslation, 'alias', [
                 'inputOptions' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'id' => 'alias-input'
                 ],
             ]); ?>
             <?= Html::button(\Yii::t('library', 'Generate'), [
-                'id' => 'generate-seo-url',
+                'id' => 'generate-alias-button',
                 'class' => 'btn btn-primary btn-in-input',
-                'url' => Url::to('generate-seo-url')
+                'data-url' => Url::to('generate-alias')
             ]); ?>
         </div>
 

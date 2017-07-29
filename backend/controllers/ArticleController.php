@@ -43,7 +43,7 @@ class ArticleController extends Controller
                     [
                         'actions' => [
                             'save',
-                            'up', 'down', 'generate-seo-url',
+                            'up', 'down', 'generate-alias',
                             'add-image', 'delete-image', 'edit-image',
                             'image-up', 'image-down',
                             'add-video', 'delete-video',
@@ -254,7 +254,7 @@ class ArticleController extends Controller
      * @param string $title
      * @return string
      */
-    public function actionGenerateSeoUrl($title)
+    public function actionGenerateAlias($title)
     {
         $newAlias = ArticleTranslation::generateAlias($title);
         return $newAlias;

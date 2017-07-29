@@ -41,7 +41,7 @@ class CategoryController extends Controller
                     [
                         'actions' => [
                             'save',
-                            'up', 'down', 'generate-seo-url',
+                            'up', 'down', 'generate-alias',
                             'add-image', 'delete-image', 'edit-image',
                             'image-up', 'image-down'
                         ],
@@ -231,7 +231,7 @@ class CategoryController extends Controller
      * @param string $title
      * @return string
      */
-    public function actionGenerateSeoUrl($title)
+    public function actionGenerateAlias($title)
     {
         $newAlias = ArticleCategoryTranslation::generateAlias($title);
         return $newAlias;
