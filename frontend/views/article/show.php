@@ -13,7 +13,7 @@ $this->title = $article->translation->title;
 $category = $article->category;
 $this->params['breadcrumbs'][] = [
     'label' => $category->translation->title,
-    'url' => ['/library/category/show', 'id' => $category->id]
+    'url' => ['/library/category/index', 'id' => $category->id]
 ];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </p>
         <?php foreach ($category->articles as $categoryArticle) : ?>
             <p>
-                <a href="<?= Url::to(['/library/article/show', 'id' => $categoryArticle->id]); ?>">
+                <a href="<?= Url::to(['/library/article/index', 'id' => $categoryArticle->id]); ?>">
                     <?= $categoryArticle->translation->title; ?>
                 </a>
             </p>

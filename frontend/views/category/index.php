@@ -1,14 +1,15 @@
 <?php
 /**
  * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
- *
- * @var $this yii\web\View
- * @var $searchModel xalberteinsteinx\library\common\search\ArticleCategorySearch
- * @var $dataProvider yii\data\ActiveDataProvider
  */
+
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+
+/* @var $this yii\web\View */
+/* @var $searchModel xalberteinsteinx\library\common\search\ArticleCategorySearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('library', 'Article Categories');
 $this->params['breadcrumbs'][] = $this->title;
@@ -30,9 +31,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'parent_id',
             'user_id',
-            'hits',
-            'created_at',
-            'updated_at',
+            'key',
+            'view_name',
+            // 'article_view_name',
+            // 'position',
+            // 'hits',
+            // 'show',
+            // 'created_at',
+            // 'updated_at',
+            // 'publish_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

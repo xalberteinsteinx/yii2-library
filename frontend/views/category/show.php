@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </p>
             <?php foreach ($parent->childCategories as $childCategory) : ?>
                 <p>
-                    <a href="<?= Url::to(['/library/article/show', 'id' => $childCategory->id]); ?>">
+                    <a href="<?= Url::to(['/library/article/index', 'id' => $childCategory->id]); ?>">
                         <?= $childCategory->translation->title; ?>
                     </a>
                 </p>
@@ -48,14 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <section class="category-articles">
                 <div class="articles-grid blue">
                     <?php foreach ($category->childCategories as $childCategory) : ?>
-                        <?php $link = Url::to(['/library/category/show', 'id' => $childCategory->id]); ?>
+                        <?php $link = Url::to(['/library/category/index', 'id' => $childCategory->id]); ?>
                         <section class="article">
                             <a href="<?= $link; ?>">
                                 <?php $imageName = $childCategory->images[0]->image_name; ?>
                                 <?php if (!empty($imageName)): ?>
                                     <img align="left" src="/images/library/category/<?= FileHelper::getFullName(
                                         \Yii::$app->library_imagable->get('category', 'thumb', $imageName)
-                                    ); ?>" alt="<?= $staticPage->translation->title; ?>">
+                                    ); ?>" alt="<?= $childCategory->translation->title; ?>">
                                 <?php endif; ?>
 
                                 <h2>
@@ -75,14 +75,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <section class="category-articles">
                 <div class="articles-grid blue">
                     <?php foreach ($category->articles as $service) : ?>
-                        <?php $link = Url::to(['/library/article/show', 'id' => $service->id]); ?>
+                        <?php $link = Url::to(['/library/article/index', 'id' => $service->id]); ?>
                         <section class="article">
                             <a href="<?= $link; ?>">
                                 <?php $imageName = $service->getFirstImage()->image_name; ?>
                                 <?php if (!empty($imageName)): ?>
                                     <img align="left" src="/images/library/article/<?= FileHelper::getFullName(
                                         \Yii::$app->library_imagable->get('article', 'thumb', $imageName)
-                                    ); ?>" alt="<?= $staticPage->translation->title; ?>">
+                                    ); ?>" alt="<?= $childCategory->translation->title; ?>">
                                 <?php endif; ?>
 
                                 <h2>
