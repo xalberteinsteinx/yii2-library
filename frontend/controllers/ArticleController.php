@@ -13,33 +13,15 @@ use yii\web\NotFoundHttpException;
 class ArticleController extends Controller
 {
     /**
-     * Lists all ArticleCategory models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-
-        if ($this->module->enableIndexArticleAction) {
-            $searchModel = new ArticleSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        }
-
-        else return $this->redirect(\Yii::$app->request->referrer);
-    }
-
-    /**
-     * Displays article category
+     * If empty id displays list all ArticleCategory models else displays ArticleCategory model.
+     *
      * @param int $id
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionShow(int $id)
+    public function actionIndex(int $id)
     {
+
         if (!empty($id)) {
             $article = Article::findOne($id);
             if (!empty($article)) {
@@ -47,6 +29,20 @@ class ArticleController extends Controller
             }
 
         }
+
+        else {
+            if ($this->module->enableIndexArticleAction) {
+                $searchModel = new ArticleSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+        }
+
         throw new NotFoundHttpException();
     }
+
 }

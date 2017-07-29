@@ -15,32 +15,13 @@ class CategoryController extends Controller
 {
 
     /**
-     * Lists all ArticleCategory models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-
-        if ($this->module->enableIndexCategoryAction) {
-            $searchModel = new ArticleCategorySearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        }
-
-        else return $this->redirect(\Yii::$app->request->referrer);
-    }
-
-    /**
-     * Displays article category
-     * @param int $id
+     * If empty id displays list of all ArticleCategory models else displays ArticleCategory model.
+     *
+     * @param   $id
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionShow(int $id)
+    public function actionIndex(int $id)
     {
         if (!empty($id)) {
             $category = ArticleCategory::find()->with('articles')->where(['id' => $id])->one();
@@ -48,6 +29,18 @@ class CategoryController extends Controller
                 return $this->render('show', ['category' => $category]);
             }
 
+        }
+        else {
+
+            if ($this->module->enableIndexCategoryAction) {
+                $searchModel = new ArticleCategorySearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
         }
         throw new NotFoundHttpException();
     }
