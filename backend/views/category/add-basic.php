@@ -62,7 +62,7 @@ LibraryAsset::register($this);
                 <?= Html::a(
                     Html::tag('span', FA::i(FA::_EXTERNAL_LINK) . Yii::t('shop', 'View on website')),
                     (Yii::$app->get('urlManagerFrontend'))
-                        ->createAbsoluteUrl(['/library/category/index', 'id' => $category->id, 'languageId' => $selectedLanguage->id], true), [
+                        ->createAbsoluteUrl(['/library/category/index', 'id' => $category->id], true), [
                     'class' => 'btn btn-info btn-xs',
                     'target' => '_blank'
                 ]); ?>

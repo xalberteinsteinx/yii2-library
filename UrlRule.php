@@ -170,15 +170,18 @@ class UrlRule extends Object implements UrlRuleInterface
             if($route == $this->articleRoute) {
                 $article = Article::findOne($id);
 
-                if($article->getTranslation($language->id) && $article->getTranslation($language->id)->alias) {
-                    $pathInfo = $article->getTranslation($language->id)->alias;
-                    $parentId = $article->category_id;
-                }
+                if (!empty($article)) {
+                    if($article->getTranslation($language->id) && $article->getTranslation($language->id)->alias) {
+                        $pathInfo = $article->getTranslation($language->id)->alias;
+                        $parentId = $article->category_id;
+                    }
 
-            else return false;
+                }
+                else return false;
+
             }
 
-        else if($route == $this->categoryRoute) {
+            else if($route == $this->categoryRoute) {
                 $category = ArticleCategory::findOne($id);
 
                 if($category->getTranslation($language->id) && $category->getTranslation($language->id)->alias) {
