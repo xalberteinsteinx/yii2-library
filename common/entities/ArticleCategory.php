@@ -27,11 +27,12 @@ use yii2tech\ar\position\PositionBehavior;
  * @property string $updated_at
  * @property string $publish_at
  *
- * @property Article[] $articles
- * @property ArticleCategory $parent
- * @property ArticleCategory[] $articleCategories
- * @property User $user
- * @property ArticleCategoryImage[] $images
+ * @property Article[]                      $articles
+ * @property ArticleCategory                $parent
+ * @property ArticleCategory[]              $articleCategories
+ * @property ArticleCategory[]              $childCategories
+ * @property User                           $user
+ * @property ArticleCategoryImage[]         $images
  *
  * @property ArticleCategoryTranslation[] $translations
  * @property ArticleTranslation $translation
