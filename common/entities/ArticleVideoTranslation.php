@@ -10,13 +10,13 @@ use yii\db\ActiveRecord;
  * This is the model class for table "article_video_translation".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_video_id
- * @property integer $language_id
- * @property string $description
+ * @property integer        $id
+ * @property integer        $article_video_id
+ * @property integer        $language_id
+ * @property string         $description
  *
- * @property ArticleVideo $articleVideo
- * @property Language $language
+ * @property ArticleVideo   $articleVideo
+ * @property Language       $language
  */
 class ArticleVideoTranslation extends ActiveRecord
 {

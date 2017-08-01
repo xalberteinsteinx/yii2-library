@@ -14,17 +14,17 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $category_id
- * @property integer $user_id
- * @property string $key
- * @property string $view_name
- * @property integer $position
- * @property integer $hits
- * @property integer $show
- * @property string $created_at
- * @property string $updated_at
- * @property string $publish_at
+ * @property integer                    $id
+ * @property integer                    $category_id
+ * @property integer                    $user_id
+ * @property string                     $key
+ * @property string                     $view_name
+ * @property integer                    $position
+ * @property integer                    $hits
+ * @property integer                    $show
+ * @property string                     $created_at
+ * @property string                     $updated_at
+ * @property string                     $publish_at
  *
  * @property ArticleCategory            $category
  * @property User                       $user

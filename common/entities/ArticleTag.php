@@ -11,10 +11,11 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_tag".
  * @author Albert Gainutdinov
  *
- * @property integer $id
+ * @property integer                    $id
  *
- * @property ArticleTagArticle[] $articleTagArticles
- * @property ArticleTagTranslation[] $articleTagTranslations
+ * @property ArticleTagArticle[]        $articleTagArticles
+ * @property ArticleTagTranslation      $translation
+ * @property ArticleTagTranslation[]    $translations
  */
 class ArticleTag extends ActiveRecord
 {

@@ -14,18 +14,18 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_category".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $parent_id
- * @property integer $user_id
- * @property string $key
- * @property string $view_name
- * @property string $article_view_name
- * @property integer $position
- * @property integer $hits
- * @property integer $show
- * @property string $created_at
- * @property string $updated_at
- * @property string $publish_at
+ * @property integer                        $id
+ * @property integer                        $parent_id
+ * @property integer                        $user_id
+ * @property string                         $key
+ * @property string                         $view_name
+ * @property string                         $article_view_name
+ * @property integer                        $position
+ * @property integer                        $hits
+ * @property integer                        $show
+ * @property string                         $created_at
+ * @property string                         $updated_at
+ * @property string                         $publish_at
  *
  * @property Article[]                      $articles
  * @property ArticleCategory                $parent
@@ -33,8 +33,8 @@ use yii2tech\ar\position\PositionBehavior;
  * @property User                           $user
  * @property ArticleCategoryImage[]         $images
  *
- * @property ArticleCategoryTranslation[] $translations
- * @property ArticleTranslation $translation
+ * @property ArticleCategoryTranslation[]   $translations
+ * @property ArticleCategoryTranslation     $translation
  */
 class ArticleCategory extends ActiveRecord
 {

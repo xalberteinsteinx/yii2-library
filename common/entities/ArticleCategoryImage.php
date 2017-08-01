@@ -12,15 +12,17 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_category_image".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_category_id
- * @property string $image_name
- * @property string $key
- * @property integer $position
- * @property integer $is_cover
+ * @property integer                            $id
+ * @property integer                            $article_category_id
+ * @property string                             $image_name
+ * @property string                             $key
+ * @property integer                            $position
+ * @property integer                            $is_cover
  *
- * @property ArticleCategory $category
- * @property ArticleCategoryImageTranslation[] $articleCategoryImageTranslations
+ * @property ArticleCategory                    $category
+ *
+ * @property ArticleCategoryImageTranslation[]  $translations
+ * @property ArticleAttachmentTranslation       $translation
  */
 class ArticleCategoryImage extends ActiveRecord
 {
@@ -91,7 +93,7 @@ class ArticleCategoryImage extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleCategoryImageTranslations()
+    public function getTranslations()
     {
         return $this->hasMany(ArticleCategoryImageTranslation::className(), ['image_id' => 'id']);
     }

@@ -10,13 +10,13 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_related_article".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_id
- * @property integer $related_article_id
- * @property integer $position
+ * @property integer    $id
+ * @property integer    $article_id
+ * @property integer    $related_article_id
+ * @property integer    $position
  *
- * @property Article $article
- * @property Article $relatedArticle
+ * @property Article    $article
+ * @property Article    $relatedArticle
  */
 class ArticleRelatedArticle extends ActiveRecord
 {

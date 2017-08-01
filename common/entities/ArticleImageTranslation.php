@@ -10,13 +10,13 @@ use yii\db\ActiveRecord;
  * This is the model class for table "article_image_translation".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_image_id
- * @property integer $language_id
- * @property string $alt_text
+ * @property integer        $id
+ * @property integer        $article_image_id
+ * @property integer        $language_id
+ * @property string         $alt_text
  *
- * @property ArticleImage $articleImage
- * @property Language $language
+ * @property ArticleImage   $articleImage
+ * @property Language       $language
  */
 class ArticleImageTranslation extends ActiveRecord
 {

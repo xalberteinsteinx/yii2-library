@@ -12,14 +12,16 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_image".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_id
- * @property string $image_name
- * @property integer $position
- * @property integer $is_cover
+ * @property integer                        $id
+ * @property integer                        $article_id
+ * @property string                         $image_name
+ * @property integer                        $position
+ * @property integer                        $is_cover
  *
- * @property Article $article
- * @property ArticleImageTranslation[] $articleImageTranslations
+ * @property Article                        $article
+ *
+ * @property ArticleImageTranslation[]      $translations
+ * @property ArticleImageTranslation        $translation
  */
 class ArticleImage extends ActiveRecord
 {

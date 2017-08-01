@@ -11,13 +11,14 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_attachment".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_id
- * @property string $file_name
- * @property integer $hits
+ * @property integer                            $id
+ * @property integer                            $article_id
+ * @property string                             $file_name
+ * @property integer                            $hits
  *
- * @property Article $article
- * @property ArticleAttachmentTranslation[] $articleAttachmentTranslations
+ * @property Article                            $article
+ * @property ArticleAttachmentTranslation[]     $translations
+ * @property ArticleAttachmentTranslation       $translation
  */
 class ArticleAttachment extends ActiveRecord
 {

@@ -11,22 +11,22 @@ use yii\helpers\Inflector;
  * This is the model class for table "article_category_translation".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_category_id
- * @property integer $language_id
- * @property string $title
- * @property string $intro_text
- * @property string $full_text
- * @property string $seo_title
- * @property integer $alias
- * @property string $meta_keywords
- * @property string $meta_description
- * @property string $meta_robots
- * @property string $meta_author
- * @property string $meta_copyright
+ * @property integer                $id
+ * @property integer                $article_category_id
+ * @property integer                $language_id
+ * @property string                 $title
+ * @property string                 $intro_text
+ * @property string                 $full_text
+ * @property string                 $seo_title
+ * @property integer                $alias
+ * @property string                 $meta_keywords
+ * @property string                 $meta_description
+ * @property string                 $meta_robots
+ * @property string                 $meta_author
+ * @property string                 $meta_copyright
  *
- * @property ArticleCategory $articleCategory
- * @property Language $language
+ * @property ArticleCategory        $articleCategory
+ * @property Language               $language
  */
 class ArticleCategoryTranslation extends ActiveRecord
 {

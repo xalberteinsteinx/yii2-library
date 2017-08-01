@@ -8,12 +8,12 @@ use Yii;
  * This is the model class for table "article_tag_article".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $tag_id
- * @property integer $article_id
+ * @property integer        $id
+ * @property integer        $tag_id
+ * @property integer        $article_id
  *
- * @property Article $article
- * @property ArticleTag $tag
+ * @property Article        $article
+ * @property ArticleTag     $tag
  */
 class ArticleTagArticle extends \yii\db\ActiveRecord
 {

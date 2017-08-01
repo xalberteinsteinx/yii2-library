@@ -11,17 +11,18 @@ use yii2tech\ar\position\PositionBehavior;
  * This is the model class for table "article_video".
  * @author Albert Gainutdinov
  *
- * @property integer $id
- * @property integer $article_id
- * @property string $video_name
- * @property string $resource
- * @property integer $position
- * @property integer $auto_play
- * @property integer $loop
- * @property string $poster
+ * @property integer                        $id
+ * @property integer                        $article_id
+ * @property string                         $video_name
+ * @property string                         $resource
+ * @property integer                        $position
+ * @property integer                        $auto_play
+ * @property integer                        $loop
+ * @property string                         $poster
  *
- * @property Article $article
- * @property ArticleVideoTranslation[] $articleVideoTranslations
+ * @property Article                        $article
+ * @property ArticleVideoTranslation[]      $translations
+ * @property ArticleVideoTranslation        $translation
  */
 class ArticleVideo extends ActiveRecord
 {
