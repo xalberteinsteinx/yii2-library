@@ -35,6 +35,9 @@ use yii2tech\ar\position\PositionBehavior;
  * @property ArticleTagArticle[] $articleTagArticles
  * @property ArticleTranslation[] $articleTranslations
  * @property ArticleVideo[] $videos
+ *
+ * @property ArticleTranslation[] $translations
+ * @property ArticleTranslation $translation
  */
 class Article extends ActiveRecord
 {

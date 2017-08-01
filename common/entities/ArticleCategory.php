@@ -32,7 +32,9 @@ use yii2tech\ar\position\PositionBehavior;
  * @property ArticleCategory[] $articleCategories
  * @property User $user
  * @property ArticleCategoryImage[] $images
- * @property ArticleCategoryTranslation[] $articleCategoryTranslations
+ *
+ * @property ArticleCategoryTranslation[] $translations
+ * @property ArticleTranslation $translation
  */
 class ArticleCategory extends ActiveRecord
 {
