@@ -26,18 +26,17 @@ use yii2tech\ar\position\PositionBehavior;
  * @property string $updated_at
  * @property string $publish_at
  *
- * @property ArticleCategory $category
- * @property User $user
- * @property ArticleAttachment[] $articleAttachments
- * @property ArticleImage[] $images
- * @property ArticleRelatedArticle[] $articleRelatedArticles
- * @property ArticleRelatedArticle[] $articleRelatedArticles0
- * @property ArticleTagArticle[] $articleTagArticles
- * @property ArticleTranslation[] $articleTranslations
- * @property ArticleVideo[] $videos
+ * @property ArticleCategory            $category
+ * @property User                       $user
+ * @property ArticleAttachment[]        $articleAttachments
+ * @property ArticleImage[]             $images
+ * @property ArticleImage               $firstImage
+ * @property ArticleRelatedArticle[]    $articleRelatedArticles
+ * @property ArticleTagArticle[]        $articleTagArticles
+ * @property ArticleVideo[]             $videos
  *
- * @property ArticleTranslation[] $translations
- * @property ArticleTranslation $translation
+ * @property ArticleTranslation[]       $translations
+ * @property ArticleTranslation         $translation
  */
 class Article extends ActiveRecord
 {
@@ -166,14 +165,6 @@ class Article extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getArticleRelatedArticles0()
-    {
-        return $this->hasMany(ArticleRelatedArticle::className(), ['related_article_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getArticleTagArticles()
     {
         return $this->hasMany(ArticleTagArticle::className(), ['article_id' => 'id']);
@@ -182,17 +173,17 @@ class Article extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTranslations()
+    public function getVideos()
     {
-        return $this->hasMany(ArticleTranslation::className(), ['article_id' => 'id']);
+        return $this->hasMany(ArticleVideo::className(), ['article_id' => 'id'])->orderBy('position');
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getVideos()
+    public function getTranslations()
     {
-        return $this->hasMany(ArticleVideo::className(), ['article_id' => 'id'])->orderBy('position');
+        return $this->hasMany(ArticleTranslation::className(), ['article_id' => 'id']);
     }
 
 

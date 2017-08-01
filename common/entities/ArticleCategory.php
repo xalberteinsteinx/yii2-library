@@ -29,7 +29,6 @@ use yii2tech\ar\position\PositionBehavior;
  *
  * @property Article[]                      $articles
  * @property ArticleCategory                $parent
- * @property ArticleCategory[]              $articleCategories
  * @property ArticleCategory[]              $childCategories
  * @property User                           $user
  * @property ArticleCategoryImage[]         $images
