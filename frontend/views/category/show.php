@@ -16,19 +16,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <article class="flex">
     <?php if (!empty($parent = $category->parent)): ?>
-    <aside>
+        <aside>
 
             <p class="h2">
                 <?= $parent->translation->title; ?>
             </p>
             <?php foreach ($parent->childCategories as $childCategory) : ?>
                 <p>
-                    <a href="<?= Url::to(['/library/article/index', 'id' => $childCategory->id]); ?>">
+                    <a href="<?= Url::to(['/library/category/index', 'id' => $childCategory->id]); ?>">
                         <?= $childCategory->translation->title; ?>
                     </a>
                 </p>
             <?php endforeach; ?>
-    </aside>
+        </aside>
     <?php endif; ?>
 
     <div class="article-content">
@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?php if (!empty($imageName)): ?>
                                     <img align="left" src="/images/library/article/<?= FileHelper::getFullName(
                                         \Yii::$app->library_imagable->get('article', 'thumb', $imageName)
-                                    ); ?>" alt="<?= $childCategory->translation->title; ?>">
+                                    ); ?>" alt="<?= $service->translation->title; ?>">
                                 <?php endif; ?>
 
                                 <h2>
