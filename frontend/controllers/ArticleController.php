@@ -11,6 +11,20 @@ use xalberteinsteinx\library\frontend\behaviors\SeoBehavior;
  */
 class ArticleController extends Controller
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'staticPage' => [
+                'class' => SeoBehavior::className(),
+                'replace_pairs_in_title' => []
+            ]
+        ];
+    }
+
     /**
      * Displays Article model.
      *
