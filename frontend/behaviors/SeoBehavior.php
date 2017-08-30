@@ -93,7 +93,7 @@ class SeoBehavior extends Behavior
         /*Sets meta-description*/
         if (!empty($translation->meta_copyright)) {
             $this->owner->view->registerMetaTag([
-                'name' => 'description',
+                'name' => 'copyright',
                 'content' => html_entity_decode(strtr($translation->meta_copyright, $this->replace_pairs_in_copyright))
             ]);
         }
