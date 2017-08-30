@@ -2,8 +2,7 @@
 namespace xalberteinsteinx\library\frontend\controllers;
 
 use xalberteinsteinx\library\common\entities\ArticleCategory;
-use xalberteinsteinx\library\common\search\ArticleCategorySearch;
-use Yii;
+use xalberteinsteinx\library\frontend\behaviors\SeoBehavior;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -15,10 +14,23 @@ class CategoryController extends Controller
 {
 
     /**
-     * If empty id displays list of all ArticleCategory models else displays ArticleCategory model.
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'staticPage' => [
+                'class' => SeoBehavior::className(),
+                'replace_pairs_in_title' => []
+            ]
+        ];
+    }
+
+    /**
+     * Displays ArticleCategory model.
      *
      * @param   $id
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException
      */
     public function actionIndex(int $id)
@@ -26,22 +38,16 @@ class CategoryController extends Controller
         if (!empty($id)) {
             $category = ArticleCategory::find()->with('articles')->where(['id' => $id])->one();
             if (!empty($category)) {
+
+                /**
+                 * @var $this SeoBehavior
+                 */
+                $this->setMetaTags($category->translation);
                 return $this->render('show', ['category' => $category]);
             }
 
         }
-        else {
 
-            if ($this->module->enableIndexCategoryAction) {
-                $searchModel = new ArticleCategorySearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-                return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                ]);
-            }
-        }
         throw new NotFoundHttpException();
     }
 }
