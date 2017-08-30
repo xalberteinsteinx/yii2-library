@@ -56,7 +56,7 @@ class SeoBehavior extends Behavior
     {
 
         /*Sets title tag*/
-        $this->owner->view->title = strtr(($translation->seoTitle ?? $translation->title), $this->replace_pairs_in_title);
+        $this->owner->view->title = strtr(($translation->seo_title ?? $translation->title), $this->replace_pairs_in_title);
 
         /*Sets meta-keywords*/
         if (!empty($translation->meta_keywords)) {
