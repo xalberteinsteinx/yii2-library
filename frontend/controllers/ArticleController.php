@@ -1,11 +1,10 @@
 <?php
 namespace xalberteinsteinx\library\frontend\controllers;
 
-use xalberteinsteinx\library\common\entities\Article;
-use xalberteinsteinx\library\common\search\ArticleSearch;
-use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use xalberteinsteinx\library\common\entities\Article;
+use xalberteinsteinx\library\frontend\behaviors\SeoBehavior;
 
 /**
  * @author Albert Gainutdinov <xalbert.einsteinx@gmail.com>
@@ -13,10 +12,10 @@ use yii\web\NotFoundHttpException;
 class ArticleController extends Controller
 {
     /**
-     * If empty id displays list all ArticleCategory models else displays ArticleCategory model.
+     * Displays Article model.
      *
      * @param int $id
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException
      */
     public function actionIndex(int $id)
@@ -24,22 +23,16 @@ class ArticleController extends Controller
 
         if (!empty($id)) {
             $article = Article::findOne($id);
+
             if (!empty($article)) {
+
+                /**
+                 * @var $this SeoBehavior
+                 */
+                $this->setMetaTags($article->translation);
                 return $this->render('show', ['article' => $article]);
             }
 
-        }
-
-        else {
-            if ($this->module->enableIndexArticleAction) {
-                $searchModel = new ArticleSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-                return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                ]);
-            }
         }
 
         throw new NotFoundHttpException();
